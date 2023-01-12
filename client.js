@@ -119,6 +119,10 @@ setTick(() => {
         } else {
             SetVehicleMaxSpeed(vehicle, -1);
         }
+    } else {
+        if (cruiseControlSpeed) {
+            cruiseControlSpeed = null;   
+        }
     }
 
     updateSpeedIndicator();
