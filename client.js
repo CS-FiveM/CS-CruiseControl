@@ -27,7 +27,13 @@ const getRoundedCruiseControlSpeedInMPH = () => {
 }
 
 const setCruiseControlSpeedInMPH = (speed) => {
-    cruiseControlSpeed = speed / mphConversionFactor;
+    const newSpeed = speed / mphConversionFactor;
+
+    if (newSpeed === 0) {
+        cruiseControlSpeed = null;
+    } else {
+        cruiseControlSpeed = newSpeed;
+    }
 }
 
 var cruiseControlSpeed = null;
@@ -46,7 +52,7 @@ const getMinimapAnchor = () => {
     ];
 }
 
-setTick(() => {
+const updateSpeedIndicator = () => {
     SetTextFont(4);
     SetTextScale(0.6, 0.6)
     SetTextColour(200, 0, 0, 255);
@@ -55,7 +61,7 @@ setTick(() => {
 
     const [x, y] = getMinimapAnchor();
     DrawText(x + 0.005, y + 0.005);
-})
+}
 
 /**
  * CC Command / Bindings
@@ -71,6 +77,16 @@ RegisterCommand('cs_cruisecontrol_activate', () => {
         } else {
             cruiseControlSpeed = null;
         }
+    }
+});
+
+RegisterCommand('cruise', (source, args, rawCommand) => {
+    const vehicle = getVehicleDrivenByPlayer();
+    const input = args[0];
+    const speed = parseInt(input);
+
+    if (speed) {
+        setCruiseControlSpeedInMPH(speed);
     }
 });
 
@@ -96,6 +112,7 @@ RegisterCommand('cs_cruisecontrol_decrease', () => {
 
 setTick(() => {
     const vehicle = getVehicleDrivenByPlayer();
+    
     if (vehicle) {
         if (cruiseControlSpeed) {
             SetVehicleMaxSpeed(vehicle, cruiseControlSpeed);
@@ -103,6 +120,8 @@ setTick(() => {
             SetVehicleMaxSpeed(vehicle, -1);
         }
     }
+
+    updateSpeedIndicator();
 });
 
 
