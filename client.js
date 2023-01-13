@@ -1,7 +1,6 @@
 /**
  * CC Constants
  */
-
 const mphConversionFactor = 2.23694;
 
 /**
@@ -85,7 +84,7 @@ RegisterCommand('cruise', (source, args, rawCommand) => {
     const input = args[0];
     const speed = parseInt(input);
 
-    if (speed) {
+    if (vehicle && speed) {
         setCruiseControlSpeedInMPH(speed);
     }
 });
